@@ -1,3 +1,15 @@
+import React, { Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { lazy } from 'react';
+
+const Home = lazy(() => import('../pages/Home/Home'));
+const Movies = lazy(() => import('../pages/Movies/Movies'));
+const MovieDetails = lazy(() => import('../pages/Moviedetails/MovieDetails'));
+const Cast = lazy(() => import('./Cast/Cast'));
+const Reviews = lazy(() => import('./Reviews/Reviews'));
+const Layout = lazy(() => import('../pages/Layout/Layout'));
+const NoResults = lazy(() => import('../pages/NoResults'));
+
 export const App = () => {
   return (
     <div
@@ -7,10 +19,22 @@ export const App = () => {
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
-        color: '#010101'
+        color: '#010101',
       }}
     >
-      React homework template
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="movies" element={<Movies />} />
+            <Route path="/movies/:movieId" element={<MovieDetails />}>
+              <Route path="cast" element={<Cast />}></Route>
+              <Route path="reviews" element={<Reviews />}></Route>
+            </Route>
+          </Route>
+          <Route path="*" element={<NoResults />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
