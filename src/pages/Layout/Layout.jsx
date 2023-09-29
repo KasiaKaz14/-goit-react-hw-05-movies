@@ -1,25 +1,24 @@
-import { Outlet } from 'react-router-dom';
-import { Suspense } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import css from './Layout.module.css';
 
-export const Layout = () => {
+const Layout = () => {
   return (
-    <>
-      <div className={css.nav}>
-        <NavLink to="/" className={css.link}>
-          Home
-        </NavLink>
-        <NavLink to="/movies" className={css.link}>
-          Movies
-        </NavLink>
-      </div>
-
-      <div className={css.container}>
-        <Suspense>
-          <Outlet />
-        </Suspense>
-      </div>
-    </>
+    <div className={css.container}>
+      <nav className={css.nav}>
+        <div>
+          <NavLink className={css.link} to="/">
+            Home
+          </NavLink>
+        </div>
+        <div>
+          <NavLink className={css.link} to="movies">
+            Movies
+          </NavLink>
+        </div>
+      </nav>
+      <Outlet />
+    </div>
   );
 };
+
+export default Layout;

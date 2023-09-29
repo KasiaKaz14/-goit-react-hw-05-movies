@@ -1,35 +1,44 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { searchTranding } from 'SearchMovies/SearchMovies';
+import { apiKey } from 'SearchMovies/SearchMovies';
 import { Link } from 'react-router-dom';
 import css from './Home.module.css';
 
-export const Home = () => {
-  const [movies, setMovies] = useState([]);
-  const location = useLocation();
+const Home = () => {
+  const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
+
+  const [trandingMovies, setTrandingMovies] = useState([]);
   useEffect(() => {
-    searchTranding().then(setMovies);
-  }, []);
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTrandingMovies(data.results);
+        console.log(data.results);
+        return data.results;
+      } catch (error) {
+        console.error('Error:', error);
+        return [];
+      }
+    };
+    fetchMovies();
+  }, [apiUrl]);
 
   return (
-    <div className={css.home_container}>
-      <h1 className={css.home_title}>Tranding today</h1>
-      {movies.length > 0 && (
-        <ul className={css.movie_list}>
-          {movies.map(({ id, title, poster }) => (
-            <li key={id} className={css.movie_item}>
-              <Link
-                to={`/movies/${id}`}
-                state={{ from: location }}
-                className={css.movie_link}
-              >
-                <img src={poster} alt={title} className={css.movie_img} />
-                <h3 className={css.movie_title}>{title}</h3>
-              </Link>
+    <div>
+      <ul className={css.container}>
+        {trandingMovies.map(movie => {
+          return (
+            <li key={movie.id}>
+              <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
             </li>
-          ))}
-        </ul>
-      )}
+          );
+        })}
+      </ul>
     </div>
   );
 };
+
+export default Home;
