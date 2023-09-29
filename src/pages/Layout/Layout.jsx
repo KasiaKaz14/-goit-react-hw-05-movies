@@ -6,16 +6,16 @@ import css from './Layout.module.css';
 export const Layout = () => {
   return (
     <>
-      <div className={css.layout_nav}>
-        <NavLink to="/" className={css.layout_link}>
+      <div className={css.nav}>
+        <NavLink to="/" className={css.link}>
           Home
         </NavLink>
-        <NavLink to="/movies" className={css.layout_link}>
+        <NavLink to="/movies" className={css.link}>
           Movies
         </NavLink>
       </div>
 
-      <div className={css.layout_container}>
+      <div className={css.container}>
         <Suspense>
           <Outlet />
         </Suspense>
