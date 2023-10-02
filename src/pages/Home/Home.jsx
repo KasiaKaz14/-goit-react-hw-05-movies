@@ -1,42 +1,35 @@
 import { useState, useEffect } from 'react';
-import { apiKey } from 'SearchMovies/SearchMovies';
+import { useLocation } from 'react-router-dom';
+import { searchTranding } from 'SearchMovies/api';
 import { Link } from 'react-router-dom';
 import css from './Home.module.css';
 
 const Home = () => {
-  const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
-
-  const [trandingMovies, setTrandingMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const location = useLocation();
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setTrandingMovies(data.results);
-        console.log(data.results);
-        return data.results;
-      } catch (error) {
-        console.error('Error:', error);
-        return [];
-      }
-    };
-    fetchMovies();
-  }, [apiUrl]);
+    searchTranding().then(setMovies);
+  }, []);
 
   return (
-    <div>
-      <ul className={css.container}>
-        {trandingMovies.map(movie => {
-          return (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
+    <div className={css.container}>
+      <h1>Tranding today</h1>
+      {movies.length > 0 && (
+        <ul className={css.list}>
+          {movies.map(({ id, title, poster }) => (
+            <li key={id} className={css.item}>
+              <Link
+                to={`/movies/${id}`}
+                state={{ from: location }}
+                className={css.movie_link}
+              >
+                <img src={poster} alt={title} className={css.img} />
+                <h3 className={css.movie_title}>{title}</h3>
+              </Link>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

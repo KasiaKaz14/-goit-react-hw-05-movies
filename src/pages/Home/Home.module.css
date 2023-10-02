@@ -1,8 +1,41 @@
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+}
+
+.list {
   list-style-type: none;
   text-decoration: none;
+}
+
+.img {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  height: 330px;
+  display: block;
+  border-radius: 5px;
+}
+
+.item {
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+  width: 100%;
+  max-width: 380px;
+  font-size: 10px;
+  padding-left: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  display: inline-block;
+  flex-direction: column;
+  flex-wrap: wrap;
+  text-decoration: none;
+  color: black;
+  transition-duration: 300ms;
 }

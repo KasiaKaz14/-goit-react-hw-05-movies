@@ -1,77 +1,75 @@
-import { apiKey } from 'SearchMovies/SearchMovies';
 import { useState, useEffect } from 'react';
-import { Link, useParams, Outlet } from 'react-router-dom';
+import { useParams, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { searchMovieDetails } from 'SearchMovies/api';
+import { Link } from 'react-router-dom';
 import css from './MovieDetails.module.css';
 
-const Movie = () => {
+const MovieDetails = () => {
+  const [movie, setMovie] = useState(null);
   const { movieId } = useParams();
-  const [movieDetails, setMovieDetails] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const backLinkHref = location.state?.from ?? '/movie';
 
-  const MOVIE_LINK = 'https://image.tmdb.org/t/p/w500';
+  const { poster, title, releaseYear, userScore, overview, genres } =
+    movie ?? {};
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`
-        );
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setMovieDetails(data);
-        console.log(data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-    fetchMovieDetails();
+    searchMovieDetails(movieId).then(setMovie);
   }, [movieId]);
 
+  const backToMovies = () => {
+    navigate(backLinkHref);
+  };
+
   return (
-    <div>
-      <nav>
-        <Link to="/">
-          <button className={css.button}>Go back</button>
-        </Link>
-      </nav>
-      {movieDetails && (
-        <div className={css.wrapper}>
-          <div>
-            <img
-              className={css.details}
-              alt=""
-              src={MOVIE_LINK + movieDetails.poster_path}
-            />
+    <>
+      <button type="button" onClick={backToMovies} className={css.button}>
+        Go Back
+      </button>
+      {movie && (
+        <div>
+          <div className={css.container}>
+            <img src={poster} alt={title} className={css.img} />
+            <div className={css.info}>
+              <h3 className={css.title}>
+                {title} ({releaseYear})
+              </h3>
+              <p>User Score: {userScore}%</p>
+              <h3>Overview</h3>
+              <p>{overview}</p>
+              <h3>Genres</h3>
+              <p>{genres.map(({ name }) => name).join(' ')}</p>
+            </div>
           </div>
-          <div>
-            <h1 className={css.title}>{movieDetails.title}</h1>
-            <p>
-              <span className={css.details}>Run Time:</span>{' '}
-              {movieDetails.runtime} min
-            </p>
-            <h2 className={css.details}>Overview</h2>
-            <p className={css.detail}>{movieDetails.overview}</p>
-            <h2 className={css.details}>Genres</h2>
-            <p className={css.details}>
-              {movieDetails.genres.map(genre => {
-                return (
-                  <span key={genre.id} className={css.genre}>
-                    {genre.name}
-                  </span>
-                );
-              })}
-            </p>
+
+          <p className={css.addInfo}>Additional information</p>
+
+          <div className={css.info_list}>
+            <li>
+              <Link
+                to={'cast'}
+                state={{ from: location?.state?.from }}
+                className={css.detailLink}
+              >
+                Cast
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={'reviews'}
+                state={{ from: location?.state?.from }}
+                className={css.detailLink}
+              >
+                Reviews
+              </Link>
+            </li>
+            <Outlet />
           </div>
         </div>
       )}
-      <div className={css.detailLink}>
-        <Link to="cast">Cast</Link>
-        <Link to="reviews">Reviews</Link>
-      </div>
-      <Outlet />
-    </div>
+    </>
   );
 };
 
-export default Movie;
+export default MovieDetails;

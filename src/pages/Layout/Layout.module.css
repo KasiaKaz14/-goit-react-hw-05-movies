@@ -22,8 +22,11 @@
   margin-right: 30px;
   text-decoration: none;
   &.active {
-    color: #13a621;
-    font-weight: 700;
-    transform: scale(1.1);
+    color: green;
+  }
+  &:focus,
+  &:hover {
+    cursor: pointer;
+    color: green;
   }
 }
