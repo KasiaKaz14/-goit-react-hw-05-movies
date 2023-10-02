@@ -12,7 +12,9 @@ const Movies = () => {
   const searchName = searchParams.get('name');
 
   useEffect(() => {
-    searchByName && searchByName(searchName).then(setMovies);
+    if (searchName) {
+      searchByName(searchName).then(setMovies);
+    }
   }, [searchName]);
 
   const handleSubmit = async e => {
