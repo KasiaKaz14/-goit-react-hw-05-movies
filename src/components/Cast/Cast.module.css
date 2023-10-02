@@ -27,10 +27,12 @@
 }
 
 .img {
-  padding: 0px;
-  margin: 0px;
+  padding-left: 25px;
   height: 300px;
-  display: block;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }

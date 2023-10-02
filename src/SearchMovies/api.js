@@ -75,6 +75,7 @@ export const searchMovieCredits = movieId => {
         id,
         name,
         character,
+        photo: IMG_URL + photo,
       }))
     )
     .catch(error => {
