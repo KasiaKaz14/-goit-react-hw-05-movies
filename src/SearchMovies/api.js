@@ -1,4 +1,5 @@
 import axios from 'axios';
+import noImage from '../components/NoImage/NoImageAvailable.jpg';
 
 axios.defaults.baseURL = 'https://api.themoviedb.org/3';
 axios.defaults.params = {
@@ -75,7 +76,7 @@ export const searchMovieCredits = movieId => {
         id,
         name,
         character,
-        photo: IMG_URL + photo,
+        photo: photo ? IMG_URL + photo : noImage,
       }))
     )
     .catch(error => {
